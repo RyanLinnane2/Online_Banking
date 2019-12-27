@@ -23,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.google.gson.*;
 
 
 /**
@@ -57,7 +58,43 @@ public class UserResource {
         return userService.createUser(u);
     }
     */
+    // curl -v -X POST http://localhost:49000/api/users/ -d {"name": "Bob","address": "123 Dawson St, Dublin 2","email": "email@email.com",password": "pass123"}
+    /* In Postman...Body -> raw
+    *   {
+    *   "name": "Bob",
+    *   "address": "123 Dawson St, Dublin 2",
+    *   "email": "email@email.com",
+    *   "password": "pass123"
+    *   }
+    */
+    @POST
+    public Response addUser(String body) {
+        Gson gson = new Gson();
+        User a = gson.fromJson(body, User.class);
+        userService.createUser(a);
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(a)).build();   
+        
+    }
     
+    //curl -vi -X GET -G "http://localhost:49000/api/users/all"
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_XML)
+    public List<User> allUsers() {
+        System.out.println("Fetching user information...");
+        return userService.getAllUsers();
+    }
+    
+    //curl -vi -X GET -G "http://localhost:49000/api/users/allj"
+    @GET
+    @Path("/allj")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response allUsersJ() {
+        Gson gson = new Gson();
+        System.out.println("Fetching user information...");
+        List<User> a = userService.getAllUsers();
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(a)).build(); 
+    }  
    
 
     

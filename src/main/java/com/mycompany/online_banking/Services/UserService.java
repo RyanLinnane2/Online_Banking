@@ -17,22 +17,21 @@ import java.util.List;
  * @author Ryan
  */
 public class UserService {
-    
-     
+
     private List<User> userList = Databse.getUserList();
-
-
-
+    private Databse userDB = new Databse();
 
     public User getUserById(int userId) {
-        return userList.get(userId-1);
-
+        return userList.get(userId - 1);
     }
 
-    public User createUser(User u){
-        u.setUserID(userList.size()+1);
+    public User createUser(User u) {
+        u.setUserID(userList.size() + 1);
         userList.add(u);
-        return u;    
-    
+        return u;
+    }
+
+    public List<User> getAllUsers() {
+        return userDB.getUserList();
     }
 }
