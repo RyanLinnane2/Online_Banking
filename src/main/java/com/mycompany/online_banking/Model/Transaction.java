@@ -15,6 +15,9 @@ public class Transaction {
     private double newBalance;
     private String debit_credit;
     private int transID;
+    private int accId1;
+    private int accId2;
+    private String transactionType;
 
     public Transaction(String date, String description, double newBalance, String debit_credit) {
         this.date = date;
@@ -24,7 +27,65 @@ public class Transaction {
     }
     
     
-   
-    
-    
+    public Transaction(String date, String description, double newBalance, int transID, int accId1, int accId2, String transactionType) {
+        this.date = date;
+        this.description = description;
+        this.newBalance = newBalance;
+        this.transID = transID;
+        this.accId1 = accId1;
+        this.accId2 = accId2;
+        this.transactionType = transactionType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getNewBalance() {
+        return newBalance;
+    }
+
+    public int getTransID() {
+        return transID;
+    }
+
+    public int getAccId1() {
+        return accId1;
+    }
+
+    public int getAccId2() {
+        return accId2;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNewBalance(double newBalance) {
+        this.newBalance = newBalance;
+    }
+
+    public void setTransID(int transID) {
+        this.transID = transID;
+    }
+
+    public void setAccId1(int accId1) {
+        this.accId1 = accId1;
+    }
+
+    public void setAccId2(int accId2) {
+        this.accId2 = accId2;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
 }

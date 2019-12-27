@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Account {
     private int sortCode;
-    private int balance;
+    private double balance;
     private int accountNum;
     private int accountID;
     private List<Transaction> transactions;
@@ -49,11 +49,11 @@ public class Account {
         this.sortCode = sortCode;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
@@ -63,6 +63,10 @@ public class Account {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+    
+    public void addNewTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
     }
 
     public int getAccountNum() {
