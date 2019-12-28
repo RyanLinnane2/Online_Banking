@@ -5,22 +5,17 @@
  */
 package com.mycompany.online_banking.Model;
 
-
-
 /**
  *
- * @author The Red Setters
+ * @author x18145761, x18137695
  */
-
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
-
-
 @XmlRootElement
 public class User {
-    
+
     private String name;
     private String address;
     private String email;
@@ -30,15 +25,23 @@ public class User {
 
     public User() {
     }
-    
-    
-    public User(String name, String address, String email, String password,int userID, List<Account> accounts) {
+
+    public User(String name, String address, String email, String password, int userID, List<Account> accounts) {
         this.name = name;
         this.address = address;
         this.email = email;
         this.password = password;
         this.userID = userID;
         this.accounts = accounts;
+    }
+
+    //constructor for new users
+    public User(String name, String address, String email, String password) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.accounts = new ArrayList<>();
     }
 
     public String getName() {
@@ -81,8 +84,6 @@ public class User {
         this.accounts = accounts;
     }
 
-    
-
     public int getUserID() {
         return userID;
     }
@@ -91,9 +92,4 @@ public class User {
         this.userID = userID;
     }
 
-
-
-    
 }
-
-    

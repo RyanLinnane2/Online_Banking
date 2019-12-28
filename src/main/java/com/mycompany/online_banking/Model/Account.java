@@ -12,34 +12,41 @@ import com.mycompany.online_banking.Model.User;
 
 /**
  *
- * @author The Red Setters
+ * @author x18145761, x18137695
  */
-
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @XmlRootElement
 public class Account {
+
     private int sortCode;
-    private int balance;
+    private double balance;
     private int accountNum;
     private int accountID;
     private List<Transaction> transactions;
-    
-    public Account(){
-        
+
+    public Account() {
+
     }
 
     public Account(int accountID, int sortCode, int balance, int accountNum, List<Transaction> transactions) {
         this.accountID = accountID;
         this.sortCode = sortCode;
         this.balance = balance;
-        this.accountNum =  accountNum;
+        this.accountNum = accountNum;
         this.transactions = transactions;
-        
+
     }
-    
+
+    public Account(int accountID, int sortCode, int balance, int accountNum) {
+        this.accountID = accountID;
+        this.sortCode = sortCode;
+        this.balance = balance;
+        this.accountNum = accountNum;
+        this.transactions = new ArrayList<>();
+
+    }
 
     public int getSortCode() {
         return sortCode;
@@ -49,11 +56,11 @@ public class Account {
         this.sortCode = sortCode;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
@@ -63,6 +70,10 @@ public class Account {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public void addNewTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
     }
 
     public int getAccountNum() {
@@ -80,11 +91,5 @@ public class Account {
     public void setAccountID(int accountID) {
         this.accountID = accountID;
     }
-    
-    
-    
-    
-    
 
-    
 }

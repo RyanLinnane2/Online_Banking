@@ -20,18 +20,23 @@ public class UserService {
 
     private List<User> userList = Databse.getUserList();
     private Databse userDB = new Databse();
+    private AccountServices accountServices = new AccountServices();
 
     public User getUserById(int userId) {
         return userList.get(userId - 1);
+
     }
 
-    public User createUser(User u) {
+    public void createUser(User u) {
         u.setUserID(userList.size() + 1);
+        u.setAccounts(new ArrayList<Account>());
         userList.add(u);
-        return u;
+        accountServices.createAccount(new Account(), u.getUserID());
     }
 
+    /*return all users */
     public List<User> getAllUsers() {
         return userDB.getUserList();
     }
+
 }
