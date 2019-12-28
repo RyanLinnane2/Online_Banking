@@ -42,10 +42,16 @@ public class UserResource {
   
     @GET
     @Path("/fetch/{userId}")
-    @Produces(MediaType.APPLICATION_XML)
-    public User userById(@PathParam("userId")int userId){
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userById(@PathParam("userId")int userId){
+        Gson gson = new Gson();
         System.out.println("Fetching User information...");
-        return userService.getUserById(userId);
+
+        User u =  userService.getUserById(userId);
+
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(u)).build();
+
+
     }
     
        // curl -v -X POST http://localhost:49000/api/users/createUser
@@ -72,8 +78,7 @@ public class UserResource {
         Gson gson = new Gson();
         User a = gson.fromJson(body, User.class);
         userService.createUser(a);
-        return Response.status(Response.Status.CREATED).entity(gson.toJson(a)).build();   
-        
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(a)).build();
     }
     
     //curl -vi -X GET -G "http://localhost:49000/api/users/all"
