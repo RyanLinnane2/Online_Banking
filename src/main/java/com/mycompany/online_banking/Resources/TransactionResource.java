@@ -5,6 +5,7 @@
  */
 package com.mycompany.online_banking.Resources;
 
+import com.google.gson.Gson;
 import com.mycompany.online_banking.Database.Databse;
 import com.mycompany.online_banking.Model.Account;
 import com.mycompany.online_banking.Model.Transaction;
@@ -20,7 +21,7 @@ import javax.ws.rs.core.Response;
 
 /**
  *
- * @author x18145761, x18137695
+ * @author x18145761, x18137695, x18160786
  */
 @Path("/transactions")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -38,13 +39,15 @@ public class TransactionResource {
      *   }
      */
     @POST
-    @Path("/{accId}/lodge/")
-    @Produces(MediaType.APPLICATION_XML)
-    public Response lodgeMoney(@PathParam("accId") int id, Transaction transaction) {
-        double amount = transaction.getNewBalance();
+    @Path("/{accId}/lodge/{amt}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response lodgeMoney(@PathParam("accId") int id, @PathParam("amt") double amount) {
+        Gson gson = new Gson();
+        Transaction transaction = new Transaction();
+        //double amount = transaction.getNewBalance();
         String description = transaction.getDescription();
         String message = tService.lodgeMoney(id, amount, description);
-        return Response.status(Response.Status.CREATED).entity(message).build();
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(message)).build();
     }
 
     @POST
@@ -65,17 +68,19 @@ public class TransactionResource {
      *   }
      */
     @POST
-    @Path("/{accId}/withdraw")
-    @Produces(MediaType.APPLICATION_XML)
-    public Response withdrawMoney(@PathParam("accId") int id, Transaction transaction) {
-        double amount = transaction.getNewBalance();
+    @Path("/{accId}/withdraw/{amt}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response withdrawMoney(@PathParam("accId") int id, @PathParam("amt") double amount) {
+        Gson gson = new Gson();
+        Transaction transaction = new Transaction();
+        //double amount = transaction.getNewBalance();
         String description = transaction.getDescription();
         String message = tService.withdrawMoney(id, amount, description);
-        return Response.status(Response.Status.CREATED).entity(message).build();
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(message)).build();
     }
 
     @POST
-    @Path("//{sortCode}/{accountNum}/withdraw")
+    @Path("/{sortCode}/{accountNum}/withdraw")
     @Produces(MediaType.APPLICATION_XML)
     public Response withdrawMoney2(@PathParam("sortCode") int sortCode, @PathParam("accountNum") int accountNum, Transaction transaction) {
         double amount = transaction.getNewBalance();
@@ -92,13 +97,15 @@ public class TransactionResource {
      *   }
      */
     @POST
-    @Path("/{transferFrom}/{transferTo}/transfer")
-    @Produces(MediaType.APPLICATION_XML)
-    public Response transfer(@PathParam("transferFrom") int id1, @PathParam("transferTo") int id2, Transaction transaction) {
-        double amount = transaction.getNewBalance();
+    @Path("/{transferFrom}/{transferTo}/transfer/{amt}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response transfer(@PathParam("transferFrom") int id1, @PathParam("transferTo") int id2, @PathParam("amt") double amount) {
+        Gson gson = new Gson();
+        Transaction transaction = new Transaction();
+        //double amount = transaction.getNewBalance();
         String description = transaction.getDescription();
         String message = tService.transferMoney(id1, id2, amount, description);
-        return Response.status(Response.Status.CREATED).entity(message).build();
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(message)).build();
     }
 
     @POST

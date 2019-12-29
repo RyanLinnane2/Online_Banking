@@ -55,8 +55,9 @@ public class Databse {
 
             //add to general overall account db
             accountList.add(userOneAccount1);
+            accountList.add(userTwoAccount1);//fixed for indices
             accountList.add(userOneaccount2);
-            accountList.add(userTwoAccount1);
+
 
             //------------------CREATE USERS--------------------//
             //initialise users name,address,email,password,userID,List<Account>

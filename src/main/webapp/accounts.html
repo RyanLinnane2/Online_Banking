@@ -1,56 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" href="css/datatables.min.css"/>
-        <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/datatables.min.css"/>
+    <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css"/>
 
-        <!-- JQuery -->
-        <script src="js/jquery-3.4.1.min.js"></script>
-        <!-- Bootstrap -->
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <!-- JQuery Datatables -->
-        <script src="./js/jquery.dataTables.min.js"></script>
-    </head>
-    <body>
-    <main role="main">
+    <!-- JQuery -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- JQuery Datatables -->
+    <script src="js/jquery.dataTables.min.js"></script>
+
+    <!-- JQuery Validation -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+    <!-- Serialize object -->
+    <script src="js/jquery.serialize-object.js"></script>
+</head>
+<body>
+<main role="main">
+    <div class="container">
         <div class="container">
             <div class="jumbotron">
-                <h1>Banking app</h1>
+                <a href="./index.html"><h1>Banking app</h1></a>
             </div>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">Online Bank</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Users </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="./accounts.html">Accounts <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="transactions.html">Transactions</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
         </div>
-        <div class="container">
-            <h3>Accounts for user: </h3>
-            <table id="accounttable" class="table table-striped table-bordered">
-
-            </table>
+    </div>
+    <div class="container">
+        <!-- bootstrap 4 header from: https://stackoverflow.com/questions/49707845/how-to-create-a-page-header-in-bootstrap-4 -->
+        <div class="pb-2 mt-4 mb-2 border-bottom">
+            <h3>Accounts for user: <span id="uname"></span></h3>
         </div>
-    </main>
-    <script>
+        <table id="accountstable" class="table table-striped table-bordered dataTable">
+            <thead>
+            <tr>
+                <td>Sort Code</td>
+                <td>Balance</td>
+                <td>Account Number</td>
+                <td>Account ID</td>
+                <td>Number of Transactions</td>
+            </tr>
+            </thead>
+        </table>
+        <!-- TODO: Add new user -->
+        <div class="pb-2 mt-4 mb-2 border-bottom">
+            <h3>Add account </h3>
+        </div>
+        <button type="submit" class="btn btn-primary" id="new_account_button">Add new account</button>
 
-    </script>
-    </body>
+    </div>
+</main>
+<script>
+    $(document).ready(function(){
+
+        //get the user id from the url
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var userid = url.searchParams.get("userid");
+        var username = url.searchParams.get("name");
+
+        $('#uname').text(username);
+
+        console.log("User id is: ", userid);
+
+        $('#accountstable').DataTable({
+            processing: true,
+            ajax:{url:"api/accounts/fetch/"+userid,dataSrc:""},
+            "columns": [
+                { "data": "sortCode" },
+                { "data": "balance"},
+                { "data": "accountNum" },
+                { "data": "accountID"},
+                { "data": "transactions",
+                    "render":function(data, type, row){
+                        //from https://datatables.net/forums/discussion/23909/render-using-values-from-other-column
+                        if(typeof data != "undefined"){
+                            return "<a href=\"/Online_Banking_war/account_individual.html?userid="+ userid+"&name="+username +"&accountid="+row['accountID']+"\">"+data.length+" Transactions</a>";
+                        }
+                        else
+                        {
+                            return "<a href=\"/Online_Banking_war/account_individual.html?userid="+ userid +"&name="+username +"&accountid="+row['accountID']+"\"> 0 Transactions</a>";
+                        }
+
+                    }}
+            ],
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [-1] }
+            ],
+            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            "oLanguage": {
+                "oPaginate": {
+                    "sFirst":       " ",
+                    "sPrevious":    " ",
+                    "sNext":        " ",
+                    "sLast":        " "
+                },
+                "sLengthMenu":    "Records per page: _MENU_",
+                "sInfo":          "Total of _TOTAL_ records (showing _START_ to _END_)",
+                "sInfoFiltered":  "(filtered from _MAX_ total records)"
+            }});
+
+        //validator from : https://jqueryvalidation.org/files/demo/bootstrap/index.html
+        $.validator.setDefaults( {
+            submitHandler: function () {
+                alert( "submitted!" );
+            }
+        } );
+
+
+
+
+        $('#new_account_button').on('click', function(e){
+            e.preventDefault();
+            var request   = $.ajax({
+                url:          'api/accounts/createAccount/'+userid,
+                cache:        false,
+                processData : false,
+                data:         {'test':'test'},
+                dataType:     'json',
+                contentType:  'application/json',
+                type:         'post'
+            });
+            request.done(function(output){
+                $('#accountstable').dataTable().api().ajax.reload(function(){
+                    alert("Account added");
+                }, true);
+            });
+
+            request.fail(function(jqXHR, textStatus){
+                console.log(jqXHR);
+                console.log(textStatus);
+                alert("Error");
+            });
+        });
+    });
+</script>
+</body>
 </html>

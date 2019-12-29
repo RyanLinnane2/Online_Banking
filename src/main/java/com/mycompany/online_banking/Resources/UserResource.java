@@ -40,9 +40,10 @@ public class UserResource {
     @GET
     @Path("/fetch/{userId}")
     @Produces(MediaType.APPLICATION_XML)
-    public User userById(@PathParam("userId") int userId) {
+    public Response userById(@PathParam("userId") int userId) {
+        Gson gson = new Gson();
         System.out.println("Fetching User information...");
-        return userService.getUserById(userId);
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(userService.getUserById(userId))).build();
     }
 
     // curl -v -X POST http://localhost:49000/api/users/createUser

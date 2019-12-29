@@ -5,6 +5,7 @@
  */
 package com.mycompany.online_banking.Resources;
 
+import com.google.gson.Gson;
 import com.mycompany.online_banking.Services.AccountServices;
 import com.mycompany.online_banking.Model.Account;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -30,24 +32,28 @@ public class AccountResource {
 
     @POST
     @Path("/createAccount/{userId}")
-    public Account createAccount(Account account, @PathParam("userId") int id) {
-        return accountServices.createAccount(account, id);
+    public Response createAccount( @PathParam("userId") int id) {
+        Gson gson = new Gson();
+        Account a =  accountServices.createAccount(new Account(), id);
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(a)).build();
     }
 
     @GET
     @Path("/fetch/{userId}")
-    @Produces(MediaType.APPLICATION_XML)
-    public List<Account> getAccounts(@PathParam("userId") int id) {
-        return accountServices.getAccounts(id);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAccounts(@PathParam("userId") int id) {
+        Gson gson = new Gson();
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(accountServices.getAccounts(id))).build();
     }
 
     // Enter account number to return balance of that account
     // curl -v -X POST http://localhost:49000/api/accounts/fetch/000123
     @GET
     @Path("/fetch/balance/{accountID}")
-    @Produces("text/plain")
-    public double getBalance(@PathParam("accountID") int accountID) {
-        return accountServices.getBalance(accountID);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBalance(@PathParam("accountID") int accountID) {
+        Gson gson = new Gson();
+        return Response.status(Response.Status.CREATED).entity(gson.toJson(accountServices.getBalance(accountID))).build();
     }
 
 }

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/datatables.min.css"/>
+    <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css"/>
+
+    <!-- JQuery -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- JQuery Datatables -->
+    <script src="js/jquery.dataTables.min.js"></script>
+
+    <!-- JQuery Validation -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+    <!-- Serialize object -->
+    <script src="js/jquery.serialize-object.js"></script>
+</head>
+<body>
+<main role="main">
+    <div class="container">
+        <div class="container">
+            <div class="jumbotron">
+                <a href="./index.html"><h1>Banking app</h1></a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- bootstrap 4 header from: https://stackoverflow.com/questions/49707845/how-to-create-a-page-header-in-bootstrap-4 -->
+        <div class="pb-2 mt-4 mb-2 border-bottom">
+            <h3>Account <span id="accid"></span> for user: <span id="uname"></span></h3>
+            <h3>Balance: <span id="balance"></span></h3>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="pb-2 mt-4 mb-2 border-bottom">
+                    <h3>Lodge</h3>
+                </div>
+                <form id="lodgeform">
+                    <div class="form-group">
+                        <label for="lodgeamount">Amount</label>
+                        <input type="number" class="form-control" id="lodgeamount" name="lodgeamount" placeholder="Amount">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="lodge_button">Lodge money</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="pb-2 mt-4 mb-2 border-bottom">
+                    <h3>Withdraw</h3>
+                </div>
+                <form id="withdrawform">
+                    <div class="form-group">
+                        <label for="withdrawamount">Amount</label>
+                        <input type="number" class="form-control" id="withdrawamount" name="withdrawamount" placeholder="Amount">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="withdraw_button">Withdraw money</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="pb-2 mt-4 mb-2 border-bottom">
+                    <h3>Transfer</h3>
+                </div>
+                <form id="transferform">
+                    <div class="form-group">
+                        <label for="toid">To account:</label>
+                        <input type="number" class="form-control" id="toid" name="toid" placeholder="Account ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="transferamount">Amount</label>
+                        <input type="number" class="form-control" id="transferamount" name="transferamount" placeholder="Amount">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="transfer_button">Transfer money</button>
+                </form>
+            </div>
+        </div>
+        <table id="transactionstable" class="table table-striped table-bordered dataTable">
+            <thead>
+            <tr>
+                <td>date</td>
+                <td>Balance</td>
+                <td>Transaction ID</td>
+                <td>From Account</td>
+                <td>To Account</td>
+                <td>Transaction Type</td>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</main>
+<script>
+    $(document).ready(function(){
+
+        //get the user id from the url
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var userid = url.searchParams.get("userid");
+        var username = url.searchParams.get("name");
+
+        $('#uname').text(username);
+
+        console.log("User id is: ", userid);
+
+        //Get the account
+        var accountId = url.searchParams.get("accountid");
+        $('#accid').text(accountId);
+        var account = null;
+        $.ajax({
+           url:'api/accounts/fetch/balance/'+accountId,
+           success:function(data){
+               $('#balance').text("€"+data);
+           }
+        });
+
+        $.ajax({
+            url:"api/accounts/fetch/"+userid,
+            success:function(data){
+           //find the individual account
+            for(i=0;i<data.length;i++){
+                if(data[i]['accountID']==accountId){
+                    account=data[i];
+                }
+            }
+        },
+            async: false}); // make the call blocking , we have to wait until this request completed
+
+        $('#transactionstable').DataTable({
+            processing: true,
+            data:account['transactions'],
+            "columns": [
+                {
+                    "data": "date", "render": function (data) {
+                        // From sample rest client provided on moodle
+                        var split = data.split("-");
+                        var date = new Date(split[1]+"-"+split[0]+"-"+split[2]);
+                        var month = date.getMonth() + 1;
+                        return date.getDate() + "/" + (month.toString().length > 1 ? month : "0" + month) + "/" + date.getFullYear();
+                    }
+                },
+                { "data": "newBalance"},
+                { "data": "transID" },
+                { "data": "accId1"},
+                {"data":"accId2"},
+                {"data":"transactionType"}
+
+            ],
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [-1] }
+            ],
+            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            "oLanguage": {
+                "oPaginate": {
+                    "sFirst":       " ",
+                    "sPrevious":    " ",
+                    "sNext":        " ",
+                    "sLast":        " "
+                },
+                "sLengthMenu":    "Records per page: _MENU_",
+                "sInfo":          "Total of _TOTAL_ records (showing _START_ to _END_)",
+                "sInfoFiltered":  "(filtered from _MAX_ total records)"
+            }});
+
+        //validator from : https://jqueryvalidation.org/files/demo/bootstrap/index.html
+        $.validator.setDefaults( {
+            submitHandler: function () {
+                alert( "submitted!" );
+            }
+        } );
+
+
+        $("#lodgeform").validate( {
+            rules: {
+                lodgeamount: "required",
+
+            },
+            messages: {
+                lodgeamount: "Please enter an amount",
+            },
+            errorElement: "em",
+            errorPlacement: function ( error, element ) {
+                // Add the `help-block` class to the error element
+                error.addClass( "help-block" );
+                error.insertAfter( element );
+            },
+            highlight: function ( element, errorClass, validClass ) {
+                $( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+            }
+        } );
+
+        $("#withdrawform").validate( {
+            rules: {
+                withdrawamount: "required",
+
+            },
+            messages: {
+                withdrawamount: "Please enter an amount",
+            },
+            errorElement: "em",
+            errorPlacement: function ( error, element ) {
+                // Add the `help-block` class to the error element
+                error.addClass( "help-block" );
+                error.insertAfter( element );
+            },
+            highlight: function ( element, errorClass, validClass ) {
+                $( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+            }
+        } );
+
+
+        $("#transferform").validate( {
+            rules: {
+                toid:"required",
+                transferamount: "required",
+
+            },
+            messages: {
+                toid:"Please enter an account id",
+                transferamount: "Please enter an amount",
+            },
+            errorElement: "em",
+            errorPlacement: function ( error, element ) {
+                // Add the `help-block` class to the error element
+                error.addClass( "help-block" );
+                error.insertAfter( element );
+            },
+            highlight: function ( element, errorClass, validClass ) {
+                $( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+            }
+        } );
+
+
+        $('#lodge_button').on('click', function(e){
+           e.preventDefault();
+           if($('#lodgeform').valid()){
+               var value = $('#lodgeamount').val();
+               var link = "api/transactions/"+accountId+"/lodge/"+value;
+               var request   = $.ajax({
+                   url:          link,
+                   cache:        false,
+                   processData : false,
+                   data:         {},
+                   dataType:     'json',
+                   contentType:  'application/json',
+                   type:         'post'
+               });
+               request.done(function(output){
+                   alert("Lodged amount");
+                   window.location.reload();
+               });
+
+               request.fail(function(jqXHR, textStatus){
+                   alert("Error");
+               });
+           }
+        });
+
+        $('#withdraw_button').on('click', function(e){
+            e.preventDefault();
+            if($('#withdrawform').valid()){
+                var value = $('#withdrawamount').val();
+                var link = "api/transactions/"+accountId+"/withdraw/"+value;
+                var request   = $.ajax({
+                    url:          link,
+                    cache:        false,
+                    processData : false,
+                    data:         {},
+                    dataType:     'json',
+                    contentType:  'application/json',
+                    type:         'post'
+                });
+                request.done(function(output){
+                    alert("Withdrew amount");
+                    window.location.reload();
+                });
+
+                request.fail(function(jqXHR, textStatus){
+                    alert("Error");
+                });
+            }
+        });
+
+
+        $('#transfer_button').on('click', function(e){
+            e.preventDefault();
+            if($('#transferform').valid()){
+                var value = $('#transferamount').val();
+                var to = $('#toid').val();
+                var link = "api/transactions/"+accountId+"/"+to+"/transfer/"+value;
+                var request   = $.ajax({
+                    url:          link,
+                    cache:        false,
+                    processData : false,
+                    data:         {},
+                    dataType:     'json',
+                    contentType:  'application/json',
+                    type:         'post'
+                });
+                request.done(function(output){
+                    alert("Transferred amount");
+                    window.location.reload();
+                });
+
+                request.fail(function(jqXHR, textStatus){
+                    alert("Error");
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
