@@ -40,6 +40,15 @@ public class Transaction {
         this.accId2 = accId2;
         this.transactionType = transactionType;
     }
+    
+    public Transaction(String date, double newBalance, String transID, int accId1, int accId2, String transactionType) {
+        this.date = date;
+        this.newBalance = newBalance;
+        this.transID = transID;
+        this.accId1 = accId1;
+        this.accId2 = accId2;
+        this.transactionType = transactionType;
+    }
 
     public String getDescription() {
         return description;

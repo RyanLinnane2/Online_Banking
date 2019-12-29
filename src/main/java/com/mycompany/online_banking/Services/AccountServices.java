@@ -53,6 +53,7 @@ public class AccountServices {
             // set unique random number as account number
             account.setAccountNum(n);
             account.setSortCode(sortCode);
+            account.setTransactions(new ArrayList<Transaction>());
         }
         // add new account to the database accountList
 
