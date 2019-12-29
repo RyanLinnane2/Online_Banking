@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/datatables.min.css"/>
-    <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/datatables.min.css"/>
+    <link rel="stylesheet" href="./css/dataTables.bootstrap4.min.css"/>
 
     <!-- JQuery -->
-    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="./js/jquery-3.4.1.min.js"></script>
     <!-- Bootstrap -->
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
     <!-- JQuery Datatables -->
-    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="./js/jquery.dataTables.min.js"></script>
 
     <!-- JQuery Validation -->
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
 
     <!-- Serialize object -->
-    <script src="js/jquery.serialize-object.js"></script>
+    <script src="./js/jquery.serialize-object.js"></script>
 </head>
 <body>
 <main role="main">
@@ -111,14 +111,14 @@
         $('#accid').text(accountId);
         var account = null;
         $.ajax({
-           url:'api/accounts/fetch/balance/'+accountId,
+           url:'./api/accounts/fetch/balance/'+accountId,
            success:function(data){
                $('#balance').text("€"+data);
            }
         });
 
         $.ajax({
-            url:"api/accounts/fetch/"+userid,
+            url:"./api/accounts/fetch/"+userid,
             success:function(data){
            //find the individual account
             for(i=0;i<data.length;i++){
@@ -247,7 +247,7 @@
            e.preventDefault();
            if($('#lodgeform').valid()){
                var value = $('#lodgeamount').val();
-               var link = "api/transactions/"+accountId+"/lodge/"+value;
+               var link = "./api/transactions/"+accountId+"/lodge/"+value;
                var request   = $.ajax({
                    url:          link,
                    cache:        false,
@@ -272,7 +272,7 @@
             e.preventDefault();
             if($('#withdrawform').valid()){
                 var value = $('#withdrawamount').val();
-                var link = "api/transactions/"+accountId+"/withdraw/"+value;
+                var link = "./api/transactions/"+accountId+"/withdraw/"+value;
                 var request   = $.ajax({
                     url:          link,
                     cache:        false,
@@ -299,7 +299,7 @@
             if($('#transferform').valid()){
                 var value = $('#transferamount').val();
                 var to = $('#toid').val();
-                var link = "api/transactions/"+accountId+"/"+to+"/transfer/"+value;
+                var link = "./api/transactions/"+accountId+"/"+to+"/transfer/"+value;
                 var request   = $.ajax({
                     url:          link,
                     cache:        false,

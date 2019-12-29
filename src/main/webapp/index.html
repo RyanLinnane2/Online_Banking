@@ -5,22 +5,22 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" href="css/datatables.min.css"/>
-        <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css"/>
+        <link rel="stylesheet" href="./css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./css/datatables.min.css"/>
+        <link rel="stylesheet" href="./css/dataTables.bootstrap4.min.css"/>
 
         <!-- JQuery -->
-        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="./js/jquery-3.4.1.min.js"></script>
         <!-- Bootstrap -->
-        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="./js/bootstrap.bundle.min.js"></script>
         <!-- JQuery Datatables -->
-        <script src="js/jquery.dataTables.min.js"></script>
+        <script src="./js/jquery.dataTables.min.js"></script>
 
         <!-- JQuery Validation -->
         <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
 
         <!-- Serialize object -->
-        <script src="js/jquery.serialize-object.js"></script>
+        <script src="./js/jquery.serialize-object.js"></script>
     </head>
     <body>
     <main role="main">
@@ -78,7 +78,7 @@
         $(document).ready(function(){
             var table_animals = $('#usertable').DataTable({
                 processing: true,
-                ajax:{url:"api/users/allj",dataSrc:""},
+                ajax:{url:"./api/users/allj",dataSrc:""},
                 "columns": [
                     { "data": "name" },
                     { "data": "address"},
@@ -88,11 +88,11 @@
                     "render":function(data, type, row){
                         //from https://datatables.net/forums/discussion/23909/render-using-values-from-other-column
                         if(typeof data != "undefined"){
-                            return "<a href=\"/Online_Banking_war/accounts.html?userid="+ row["userID"]+"&name="+row["name"]+"\">"+data.length+" Accounts</a>";
+                            return "<a href=\"./accounts.html?userid="+ row["userID"]+"&name="+row["name"]+"\">"+data.length+" Accounts</a>";
                         }
                         else
                         {
-                            return "<a href=\"/Online_Banking_war/accounts.html?userid="+ row["userID"]+"&name="+row["name"]+"\" > 0 Accounts</a>";
+                            return "<a href=\"./accounts.html?userid="+ row["userID"]+"&name="+row["name"]+"\" > 0 Accounts</a>";
                         }
 
                     }}
@@ -172,7 +172,7 @@
                if($('#userform').valid()){
                    var form_data = $('#userform').serializeJSON();
                    var request   = $.ajax({
-                       url:          'api/users',
+                       url:          './api/users',
                        cache:        false,
                        processData : false,
                        data:         form_data,

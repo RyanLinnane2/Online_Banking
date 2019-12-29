@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/datatables.min.css"/>
-    <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/datatables.min.css"/>
+    <link rel="stylesheet" href="./css/dataTables.bootstrap4.min.css"/>
 
     <!-- JQuery -->
-    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="./js/jquery-3.4.1.min.js"></script>
     <!-- Bootstrap -->
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
     <!-- JQuery Datatables -->
-    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="./js/jquery.dataTables.min.js"></script>
 
     <!-- JQuery Validation -->
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
 
     <!-- Serialize object -->
-    <script src="js/jquery.serialize-object.js"></script>
+    <script src="./js/jquery.serialize-object.js"></script>
 </head>
 <body>
 <main role="main">
@@ -70,7 +70,7 @@
 
         $('#accountstable').DataTable({
             processing: true,
-            ajax:{url:"api/accounts/fetch/"+userid,dataSrc:""},
+            ajax:{url:"./api/accounts/fetch/"+userid,dataSrc:""},
             "columns": [
                 { "data": "sortCode" },
                 { "data": "balance"},
@@ -80,11 +80,11 @@
                     "render":function(data, type, row){
                         //from https://datatables.net/forums/discussion/23909/render-using-values-from-other-column
                         if(typeof data != "undefined"){
-                            return "<a href=\"/Online_Banking_war/account_individual.html?userid="+ userid+"&name="+username +"&accountid="+row['accountID']+"\">"+data.length+" Transactions</a>";
+                            return "<a href=\"./account_individual.html?userid="+ userid+"&name="+username +"&accountid="+row['accountID']+"\">"+data.length+" Transactions</a>";
                         }
                         else
                         {
-                            return "<a href=\"/Online_Banking_war/account_individual.html?userid="+ userid +"&name="+username +"&accountid="+row['accountID']+"\"> 0 Transactions</a>";
+                            return "<a href=\"./account_individual.html?userid="+ userid +"&name="+username +"&accountid="+row['accountID']+"\"> 0 Transactions</a>";
                         }
 
                     }}
@@ -118,7 +118,7 @@
         $('#new_account_button').on('click', function(e){
             e.preventDefault();
             var request   = $.ajax({
-                url:          'api/accounts/createAccount/'+userid,
+                url:          './api/accounts/createAccount/'+userid,
                 cache:        false,
                 processData : false,
                 data:         {'test':'test'},
